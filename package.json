@@ -1,6 +1,6 @@
 {
   "name": "@olireswar/cc-config",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Share and install Claude Code setups",
   "type": "module",
   "bin": {
@@ -19,7 +19,13 @@
     "url": "https://github.com/OlirEswar/claude-pack"
   },
   "homepage": "https://github.com/OlirEswar/claude-pack",
-  "keywords": ["claude", "mcp", "claude-code", "ai", "cc-config"],
+  "keywords": [
+    "claude",
+    "mcp",
+    "claude-code",
+    "ai",
+    "cc-config"
+  ],
   "license": "MIT",
   "dependencies": {
     "@octokit/rest": "^21.0.0",
