@@ -181,9 +181,9 @@ export async function publishCommand(options) {
 
     if (skills.length > 0) {
       const skillsDir = join(tmpDir, 'skills');
-      await fs.ensureDir(skillsDir);
       for (const skill of skills) {
-        await fs.writeFile(join(skillsDir, skill.name), skill.content);
+        await fs.ensureDir(join(skillsDir, skill.name));
+        await fs.writeFile(join(skillsDir, skill.name, 'SKILL.md'), skill.content);
       }
     }
 

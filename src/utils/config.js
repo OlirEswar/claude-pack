@@ -111,12 +111,15 @@ export async function readSkills(dir) {
   const skillsDir = join(dir, 'skills');
   if (!(await fs.pathExists(skillsDir))) return [];
 
-  const files = await fs.readdir(skillsDir);
+  const entries = await fs.readdir(skillsDir, { withFileTypes: true });
   const skills = [];
-  for (const file of files) {
-    if (file.endsWith('.md')) {
-      const content = await fs.readFile(join(skillsDir, file), 'utf8');
-      skills.push({ name: file, content });
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      const skillMd = join(skillsDir, entry.name, 'SKILL.md');
+      if (await fs.pathExists(skillMd)) {
+        const content = await fs.readFile(skillMd, 'utf8');
+        skills.push({ name: entry.name, content });
+      }
     }
   }
   return skills;

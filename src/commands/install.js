@@ -45,7 +45,7 @@ export async function installCommand(setup, options) {
   ]);
 
   const agentMdFiles = agentFiles.filter((f) => f.name.endsWith('.md'));
-  const skillMdFiles = skillFiles.filter((f) => f.name.endsWith('.md'));
+  const skillDirs = skillFiles.filter((f) => f.type === 'dir');
 
   if (mcpCount > 0) {
     for (const [name, config] of Object.entries(mcpServers)) {
@@ -57,7 +57,7 @@ export async function installCommand(setup, options) {
     console.log(chalk.dim(`    • 0 MCP server(s)`));
   }
   console.log(chalk.dim(`    • ${agentMdFiles.length} agent(s)`));
-  console.log(chalk.dim(`    • ${skillMdFiles.length} skill(s)`));
+  console.log(chalk.dim(`    • ${skillDirs.length} skill(s)`));
   console.log(chalk.dim(`    • CLAUDE.md: ${claudeMdContent ? 'yes' : 'no'}`));
 
   // Determine install scope
@@ -105,7 +105,7 @@ export async function installCommand(setup, options) {
     }
     if (claudeMdContent) console.log(chalk.dim(`    CLAUDE.md   → ${claudeMdPath} (append)`));
     if (agentMdFiles.length > 0) console.log(chalk.dim(`    Agents      → ${agentsDir}/`));
-    if (skillMdFiles.length > 0) console.log(chalk.dim(`    Skills      → ${skillsDir}/`));
+    if (skillDirs.length > 0) console.log(chalk.dim(`    Skills      → ${skillsDir}/`));
     console.log();
     return;
   }
@@ -167,13 +167,13 @@ export async function installCommand(setup, options) {
       }
     }
 
-    // Copy skill files
-    if (skillMdFiles.length > 0) {
-      await fs.ensureDir(skillsDir);
-      for (const file of skillMdFiles) {
-        const content = await fetchRawFile(owner, repo, `skills/${file.name}`);
+    // Copy skill files (each skill is a subdirectory with SKILL.md inside)
+    if (skillDirs.length > 0) {
+      for (const dir of skillDirs) {
+        const content = await fetchRawFile(owner, repo, `skills/${dir.name}/SKILL.md`);
         if (content) {
-          await fs.writeFile(join(skillsDir, file.name), content);
+          await fs.ensureDir(join(skillsDir, dir.name));
+          await fs.writeFile(join(skillsDir, dir.name, 'SKILL.md'), content);
         }
       }
     }
