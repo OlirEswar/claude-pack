@@ -13,7 +13,7 @@ function headers(): HeadersInit {
 }
 
 export async function searchSetups(query?: string): Promise<GithubRepo[]> {
-  const q = query ? `topic:claude-pack ${query}` : 'topic:claude-pack';
+  const q = query ? `topic:cc-config ${query}` : 'topic:cc-config';
   try {
     const res = await fetch(
       `${API}/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=50`,

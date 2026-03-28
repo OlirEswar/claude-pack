@@ -72,7 +72,7 @@ export default async function SetupPage({ params }: Props) {
         <p className="text-xs text-muted mt-2 font-mono">
           requires{' '}
           <a href="https://github.com/OlirEswar/claude-pack" className="text-accent hover:underline" target="_blank" rel="noopener noreferrer">
-            claude-pack
+            cc-config
           </a>
         </p>
       </section>

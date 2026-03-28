@@ -34,7 +34,7 @@ export default async function BrowsePage() {
         {/* Quick install hint */}
         <div className="mt-5 flex items-center gap-3">
           <code className="text-xs font-mono bg-surface border border-border px-3 py-1.5 rounded-md text-[#ede9e4]">
-            npm install -g claude-pack
+            npm install -g @olireswar/cc-config
           </code>
           <span className="text-muted text-xs">then browse below ↓</span>
         </div>

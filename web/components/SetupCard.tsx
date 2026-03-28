@@ -19,9 +19,11 @@ function timeAgo(dateStr: string) {
 
 export function SetupCard({ repo, manifest, index = 0 }: Props) {
   const mcpEntries = Object.entries(manifest?.mcpServers ?? {});
-  const agentCount = manifest?.agents?.length ?? 0;
-  const skillCount = manifest?.skills?.length ?? 0;
+  const agents = manifest?.agents ?? [];
+  const skills = manifest?.skills ?? [];
   const staggerClass = `stagger-${Math.min((index % 6) + 1, 6)}`;
+
+  const hasContent = mcpEntries.length > 0 || agents.length > 0 || skills.length > 0;
 
   return (
     <a
@@ -58,24 +60,45 @@ export function SetupCard({ repo, manifest, index = 0 }: Props) {
         </p>
       )}
 
-      {/* Stats row */}
-      <div className="flex items-center gap-2 flex-wrap">
-        {mcpEntries.length > 0 && (
-          <span className="badge badge-blue">
-            <ServerIcon /> {mcpEntries.length} mcp
-          </span>
-        )}
-        {agentCount > 0 && (
-          <span className="badge badge-muted">
-            {agentCount} agent{agentCount !== 1 ? 's' : ''}
-          </span>
-        )}
-        {skillCount > 0 && (
-          <span className="badge badge-muted">
-            {skillCount} skill{skillCount !== 1 ? 's' : ''}
-          </span>
-        )}
-        <span className="badge badge-muted ml-auto">{timeAgo(repo.pushed_at)}</span>
+      {/* Content lists */}
+      {hasContent && (
+        <div className="space-y-3 mb-4">
+          {mcpEntries.length > 0 && (
+            <div>
+              <p className="text-[10px] font-mono text-accent/60 uppercase tracking-widest mb-1.5">mcp servers</p>
+              <div className="flex flex-wrap gap-1.5">
+                {mcpEntries.map(([name]) => (
+                  <span key={name} className="badge badge-blue">{name}</span>
+                ))}
+              </div>
+            </div>
+          )}
+          {agents.length > 0 && (
+            <div>
+              <p className="text-[10px] font-mono text-accent/60 uppercase tracking-widest mb-1.5">agents</p>
+              <div className="flex flex-wrap gap-1.5">
+                {agents.map((name) => (
+                  <span key={name} className="badge badge-muted">{name.replace('.md', '')}</span>
+                ))}
+              </div>
+            </div>
+          )}
+          {skills.length > 0 && (
+            <div>
+              <p className="text-[10px] font-mono text-accent/60 uppercase tracking-widest mb-1.5">skills</p>
+              <div className="flex flex-wrap gap-1.5">
+                {skills.map((name) => (
+                  <span key={name} className="badge badge-muted">{name.replace('.md', '')}</span>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* Footer */}
+      <div className="flex items-center justify-end">
+        <span className="badge badge-muted">{timeAgo(repo.pushed_at)}</span>
       </div>
     </a>
   );
@@ -89,11 +112,3 @@ function StarIcon() {
   );
 }
 
-function ServerIcon() {
-  return (
-    <svg width="10" height="10" viewBox="0 0 12 12" fill="none" stroke="currentColor" strokeWidth="1.5">
-      <rect x="1" y="1" width="10" height="4" rx="1" />
-      <rect x="1" y="7" width="10" height="4" rx="1" />
-    </svg>
-  );
-}

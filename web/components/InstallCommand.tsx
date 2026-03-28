@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 export function InstallCommand({ repo }: { repo: string }) {
   const [copied, setCopied] = useState(false);
-  const command = `claude-pack install ${repo}`;
+  const command = `cc-config install ${repo}`;
 
   async function copy() {
     await navigator.clipboard.writeText(command);

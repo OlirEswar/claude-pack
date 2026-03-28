@@ -21,7 +21,7 @@ const mono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'claude-pack — discover Claude Code setups',
+  title: 'cc-config — discover Claude Code setups',
   description: 'Browse and share MCP servers, agents, skills, and Claude Code configurations.',
 };
 
@@ -33,7 +33,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
             <a href="/" className="flex items-center group">
               <span className="font-display font-bold text-[16px] tracking-tight text-[#ede9e4] group-hover:text-accent transition-colors">
-                claude-pack
+                cc-config
               </span>
             </a>
             <a
