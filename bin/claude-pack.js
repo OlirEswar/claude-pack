@@ -4,6 +4,7 @@ import { publishCommand } from '../src/commands/publish.js';
 import { installCommand } from '../src/commands/install.js';
 import { searchCommand } from '../src/commands/search.js';
 import { updateCommand } from '../src/commands/update.js';
+import { clearCommand } from '../src/commands/clear.js';
 import { readFileSync } from 'fs';
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -46,5 +47,12 @@ program
   .description('Update an existing setup repo with your current Claude config (e.g., username/repo-name)')
   .option('-m, --message <msg>', 'Commit message')
   .action(updateCommand);
+
+program
+  .command('clear')
+  .description('Remove MCP servers, agents, skills, or CLAUDE.md sections from your setup')
+  .option('-g, --global', 'Clear global ~/.claude/ setup')
+  .option('-p, --project', 'Clear project ./.claude/ setup')
+  .action(clearCommand);
 
 program.parse();
