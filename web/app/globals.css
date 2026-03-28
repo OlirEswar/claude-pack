@@ -1,0 +1,119 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --accent-rgb: 167, 139, 250;
+  }
+
+  * { box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background-color: #09080c;
+    color: #ede9e4;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Subtle dot grid */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: radial-gradient(circle, rgba(167,139,250,0.08) 1px, transparent 1px);
+    background-size: 28px 28px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Purple vignette */
+  body::after {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(ellipse at 50% 0%, rgba(167,139,250,0.07) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  #__next, main { position: relative; z-index: 1; }
+}
+
+@layer utilities {
+  .text-muted { color: #8b87a8; }
+
+  .card {
+    background: #13111a;
+    border: 1px solid #2e2a3e;
+    border-radius: 10px;
+    transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+  }
+
+  .card:hover {
+    border-color: rgba(167, 139, 250, 0.5);
+    box-shadow: 0 0 0 1px rgba(167,139,250,0.15), 0 8px 32px rgba(167,139,250,0.08);
+    transform: translateY(-1px);
+  }
+
+  .glow-accent {
+    box-shadow: 0 0 20px rgba(167, 139, 250, 0.3), 0 0 60px rgba(167, 139, 250, 0.1);
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 500;
+    font-family: var(--font-mono);
+    letter-spacing: 0.02em;
+  }
+
+  .badge-green {
+    background: rgba(74, 222, 128, 0.1);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.2);
+  }
+
+  .badge-amber {
+    background: rgba(251, 191, 36, 0.1);
+    color: #fbbf24;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+  }
+
+  .badge-blue {
+    background: rgba(96, 165, 250, 0.1);
+    color: #60a5fa;
+    border: 1px solid rgba(96, 165, 250, 0.2);
+  }
+
+  .badge-muted {
+    background: rgba(167,139,250,0.07);
+    color: #8b87a8;
+    border: 1px solid rgba(167,139,250,0.15);
+  }
+
+  /* Staggered fade-up for card grids */
+  .stagger-1 { animation: fadeUp 0.4s ease-out 0.05s both; }
+  .stagger-2 { animation: fadeUp 0.4s ease-out 0.10s both; }
+  .stagger-3 { animation: fadeUp 0.4s ease-out 0.15s both; }
+  .stagger-4 { animation: fadeUp 0.4s ease-out 0.20s both; }
+  .stagger-5 { animation: fadeUp 0.4s ease-out 0.25s both; }
+  .stagger-6 { animation: fadeUp 0.4s ease-out 0.30s both; }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* Terminal-style scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #3a3352; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #4a4268; }
