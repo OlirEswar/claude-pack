@@ -1,0 +1,23 @@
+{
+  "name": "claude-pack",
+  "version": "0.1.0",
+  "description": "Share and install Claude Code setups",
+  "type": "module",
+  "bin": {
+    "claude-pack": "./bin/claude-pack.js"
+  },
+  "scripts": {
+    "start": "node bin/claude-pack.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^21.0.0",
+    "chalk": "^5.3.0",
+    "commander": "^12.0.0",
+    "fs-extra": "^11.2.0",
+    "inquirer": "^9.2.0",
+    "ora": "^8.0.0"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
