@@ -18,7 +18,7 @@ import { stripSecrets } from '../utils/secrets.js';
 import { getGhToken } from '../utils/github.js';
 
 export async function updateCommand(repo, options) {
-  console.log(chalk.bold(`\n  claude-pack update ${repo}\n`));
+  console.log(chalk.bold(`\n  cc-config update ${repo}\n`));
 
   const token = getGhToken();
   if (!token) {
@@ -102,7 +102,7 @@ export async function updateCommand(repo, options) {
       type: 'input',
       name: 'message',
       message: 'Commit message:',
-      default: options.message || 'Update claude-pack setup',
+      default: options.message || 'Update cc-config setup',
     },
     {
       type: 'confirm',
@@ -118,7 +118,7 @@ export async function updateCommand(repo, options) {
   }
 
   // Build updated files into a temp dir
-  const tmpDir = join(tmpdir(), `claude-pack-update-${Date.now()}`);
+  const tmpDir = join(tmpdir(), `cc-config-update-${Date.now()}`);
   await fs.ensureDir(tmpDir);
 
   try {
@@ -154,7 +154,7 @@ export async function updateCommand(repo, options) {
 
     const updateSpinner = ora('Cloning and updating repository...').start();
 
-    const cloneDir = join(tmpdir(), `claude-pack-clone-${Date.now()}`);
+    const cloneDir = join(tmpdir(), `cc-config-clone-${Date.now()}`);
     try {
       execSync(`gh repo clone ${repo} ${cloneDir}`, { stdio: 'pipe' });
 
@@ -173,10 +173,10 @@ export async function updateCommand(repo, options) {
 
       const gitEnv = {
         ...process.env,
-        GIT_AUTHOR_NAME: 'claude-pack',
-        GIT_COMMITTER_NAME: 'claude-pack',
-        GIT_AUTHOR_EMAIL: 'noreply@claude-pack',
-        GIT_COMMITTER_EMAIL: 'noreply@claude-pack',
+        GIT_AUTHOR_NAME: 'cc-config',
+        GIT_COMMITTER_NAME: 'cc-config',
+        GIT_AUTHOR_EMAIL: 'noreply@cc-config',
+        GIT_COMMITTER_EMAIL: 'noreply@cc-config',
       };
 
       execSync(`git commit -m "${answers.message}"`, { cwd: cloneDir, stdio: 'pipe', env: gitEnv });
@@ -185,7 +185,7 @@ export async function updateCommand(repo, options) {
 
       updateSpinner.succeed('Updated!');
       console.log(chalk.green(`\n  https://github.com/${repo}`));
-      console.log(chalk.dim(`  Install with: claude-pack install ${repo}\n`));
+      console.log(chalk.dim(`  Install with: cc-config install ${repo}\n`));
     } finally {
       await fs.remove(cloneDir);
     }

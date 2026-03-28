@@ -13,7 +13,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const pkg = JSON.parse(readFileSync(join(__dirname, '../package.json'), 'utf8'));
 
 program
-  .name('claude-pack')
+  .name('cc-config')
   .description('Share and install Claude Code setups')
   .version(pkg.version);
 

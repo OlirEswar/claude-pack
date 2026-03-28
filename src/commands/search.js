@@ -6,7 +6,7 @@ export async function searchCommand(query, options) {
   const limit = parseInt(options.limit, 10) || 10;
   const label = query ? `"${query}"` : 'all setups';
 
-  console.log(chalk.bold(`\n  claude-pack search ${label}\n`));
+  console.log(chalk.bold(`\n  cc-config search ${label}\n`));
 
   const spinner = ora('Searching GitHub...').start();
 
@@ -29,12 +29,12 @@ export async function searchCommand(query, options) {
         console.log(`  ${chalk.dim(repo.description)}`);
       }
 
-      const topics = (repo.topics || []).filter((t) => t !== 'claude-pack');
+      const topics = (repo.topics || []).filter((t) => t !== 'cc-config');
       if (topics.length > 0) {
         console.log(`  ${chalk.dim(topics.map((t) => `#${t}`).join('  '))}`);
       }
 
-      console.log(`  ${chalk.cyan(`claude-pack install ${repo.full_name}`)}`);
+      console.log(`  ${chalk.cyan(`cc-config install ${repo.full_name}`)}`);
       console.log();
     }
   } catch (err) {

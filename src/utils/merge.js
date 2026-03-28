@@ -51,11 +51,11 @@ export async function mergeMcpServers(existing, incoming) {
 export function appendClaudeMd(existing, incoming, source) {
   const delimiter = [
     '',
-    `<!-- claude-pack:begin source="${source}" -->`,
+    `<!-- cc-config:begin source="${source}" -->`,
     '',
     incoming.trim(),
     '',
-    `<!-- claude-pack:end source="${source}" -->`,
+    `<!-- cc-config:end source="${source}" -->`,
     '',
   ].join('\n');
 

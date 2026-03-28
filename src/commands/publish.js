@@ -55,7 +55,7 @@ async function readSetup(scope) {
 }
 
 export async function publishCommand(options) {
-  console.log(chalk.bold('\n  claude-pack publish\n'));
+  console.log(chalk.bold('\n  cc-config publish\n'));
 
   const token = getGhToken();
   if (!token) {
@@ -151,7 +151,7 @@ export async function publishCommand(options) {
     console.log(chalk.dim(`\n  Found existing repo: ${fullName}`));
   }
 
-  const tmpDir = join(tmpdir(), `claude-pack-${Date.now()}`);
+  const tmpDir = join(tmpdir(), `cc-config-${Date.now()}`);
   await fs.ensureDir(tmpDir);
 
   try {
@@ -192,15 +192,15 @@ export async function publishCommand(options) {
     try {
       const gitEnv = {
         ...process.env,
-        GIT_AUTHOR_NAME: 'claude-pack',
-        GIT_COMMITTER_NAME: 'claude-pack',
-        GIT_AUTHOR_EMAIL: 'noreply@claude-pack',
-        GIT_COMMITTER_EMAIL: 'noreply@claude-pack',
+        GIT_AUTHOR_NAME: 'cc-config',
+        GIT_COMMITTER_NAME: 'cc-config',
+        GIT_AUTHOR_EMAIL: 'noreply@cc-config',
+        GIT_COMMITTER_EMAIL: 'noreply@cc-config',
       };
 
       if (exists) {
         // Clone the existing repo, overwrite files, push a new commit
-        const cloneDir = join(tmpdir(), `claude-pack-clone-${Date.now()}`);
+        const cloneDir = join(tmpdir(), `cc-config-clone-${Date.now()}`);
         try {
           execSync(`gh repo clone ${fullName} ${cloneDir}`, { stdio: 'pipe' });
 
@@ -218,7 +218,7 @@ export async function publishCommand(options) {
             return;
           }
 
-          execSync('git commit -m "Update claude-pack setup"', { cwd: cloneDir, stdio: 'pipe', env: gitEnv });
+          execSync('git commit -m "Update cc-config setup"', { cwd: cloneDir, stdio: 'pipe', env: gitEnv });
           execSync('git push', { cwd: cloneDir, stdio: 'pipe' });
         } finally {
           await fs.remove(cloneDir);
@@ -227,7 +227,7 @@ export async function publishCommand(options) {
         // Create a fresh repo
         execSync('git init -b main', { cwd: tmpDir, stdio: 'pipe' });
         execSync('git add .', { cwd: tmpDir, stdio: 'pipe' });
-        execSync('git commit -m "Initial claude-pack setup"', { cwd: tmpDir, stdio: 'pipe', env: gitEnv });
+        execSync('git commit -m "Initial cc-config setup"', { cwd: tmpDir, stdio: 'pipe', env: gitEnv });
 
         const visibility = answers.private ? '--private' : '--public';
         execSync(
@@ -235,12 +235,12 @@ export async function publishCommand(options) {
           { cwd: tmpDir, stdio: 'pipe' },
         );
 
-        execSync(`gh repo edit ${fullName} --add-topic claude-pack`, { stdio: 'pipe' });
+        execSync(`gh repo edit ${fullName} --add-topic cc-config`, { stdio: 'pipe' });
       }
 
       publishSpinner.succeed(exists ? 'Updated!' : 'Published!');
       console.log(chalk.green(`\n  https://github.com/${fullName}`));
-      console.log(chalk.dim(`  Install with: claude-pack install ${fullName}\n`));
+      console.log(chalk.dim(`  Install with: cc-config install ${fullName}\n`));
     } catch (err) {
       publishSpinner.fail(exists ? 'Update failed' : 'Publish failed');
       console.error(chalk.red(`\n  ${err.message}\n`));

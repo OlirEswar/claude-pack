@@ -17,12 +17,12 @@ import { fetchSetupManifest, fetchRawFile, listDirectory } from '../utils/github
 export async function installCommand(setup, options) {
   const parts = setup.split('/');
   if (parts.length !== 2 || !parts[0] || !parts[1]) {
-    console.error(chalk.red('  Invalid format. Use: claude-pack install username/repo-name'));
+    console.error(chalk.red('  Invalid format. Use: cc-config install username/repo-name'));
     process.exit(1);
   }
   const [owner, repo] = parts;
 
-  console.log(chalk.bold(`\n  claude-pack install ${owner}/${repo}\n`));
+  console.log(chalk.bold(`\n  cc-config install ${owner}/${repo}\n`));
 
   // Fetch manifest
   const fetchSpinner = ora('Fetching setup manifest...').start();

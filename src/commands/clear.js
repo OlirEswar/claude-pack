@@ -16,15 +16,15 @@ import {
   readSkills,
 } from '../utils/config.js';
 
-// Strip all <!-- claude-pack:begin ... --> ... <!-- claude-pack:end ... --> blocks
+// Strip all <!-- cc-config:begin ... --> ... <!-- cc-config:end ... --> blocks
 function stripClaudePackSections(content) {
   return content
-    .replace(/\n<!-- claude-pack:begin source="[^"]*" -->\n[\s\S]*?<!-- claude-pack:end source="[^"]*" -->\n/g, '\n')
+    .replace(/\n<!-- cc-config:begin source="[^"]*" -->\n[\s\S]*?<!-- cc-config:end source="[^"]*" -->\n/g, '\n')
     .trimEnd();
 }
 
 export async function clearCommand(options) {
-  console.log(chalk.bold('\n  claude-pack clear\n'));
+  console.log(chalk.bold('\n  cc-config clear\n'));
 
   // Determine scope
   let scope;
@@ -66,7 +66,7 @@ export async function clearCommand(options) {
   ]);
 
   const mcpNames = Object.keys(mcpServers);
-  const hasClaudePackMd = claudeMd && claudeMd.includes('claude-pack:begin');
+  const hasClaudePackMd = claudeMd && claudeMd.includes('cc-config:begin');
 
   if (mcpNames.length === 0 && agents.length === 0 && skills.length === 0 && !hasClaudePackMd) {
     console.log(chalk.dim(`  Nothing to clear in ${scope} setup.\n`));
@@ -93,7 +93,7 @@ export async function clearCommand(options) {
 
   if (hasClaudePackMd) {
     choices.push(new inquirer.Separator('── CLAUDE.md ──'));
-    choices.push({ name: '  Remove claude-pack sections', value: 'claudemd' });
+    choices.push({ name: '  Remove cc-config sections', value: 'claudemd' });
   }
 
   const { selected } = await inquirer.prompt([
