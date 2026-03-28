@@ -7,7 +7,9 @@ import { tmpdir } from 'os';
 import { execSync } from 'child_process';
 import {
   getClaudeDir,
-  readGlobalSettings,
+  readGlobalMcpServers,
+  readLocalMcpServers,
+  readProjectMcpServers,
   readClaudeMd,
   readAgents,
   readSkills,
@@ -35,24 +37,53 @@ export async function updateCommand(repo, options) {
   }
 
   // Read current setup
+  const { scope } = await inquirer.prompt([
+    {
+      type: 'list',
+      name: 'scope',
+      message: 'Update from:',
+      choices: [
+        { name: `Personal  ~/.claude/      (your global setup)`, value: 'global' },
+        { name: `Project   ./.claude/      (this project's setup)`, value: 'project' },
+      ],
+    },
+  ]);
+
   const readSpinner = ora('Reading your Claude setup...').start();
   const claudeDir = getClaudeDir();
+  const cwd = process.cwd();
 
-  const settings = await readGlobalSettings();
-  const claudeMd = await readClaudeMd(join(claudeDir, 'CLAUDE.md'));
-  const agents = await readAgents(claudeDir);
-  const skills = await readSkills(claudeDir);
+  let mcpServers;
+  let claudeMd;
+  let agents;
+  let skills;
+
+  if (scope === 'global') {
+    mcpServers = await readGlobalMcpServers();
+    claudeMd = await readClaudeMd(join(claudeDir, 'CLAUDE.md'));
+    agents = await readAgents(claudeDir);
+    skills = await readSkills(claudeDir);
+  } else {
+    const dotClaude = join(cwd, '.claude');
+    const [localMcp, sharedMcp] = await Promise.all([
+      readLocalMcpServers(cwd),
+      readProjectMcpServers(cwd),
+    ]);
+    mcpServers = { ...localMcp, ...sharedMcp };
+    claudeMd = (await readClaudeMd(join(cwd, 'CLAUDE.md'))) || (await readClaudeMd(join(dotClaude, 'CLAUDE.md')));
+    agents = await readAgents(dotClaude);
+    skills = await readSkills(dotClaude);
+  }
 
   readSpinner.succeed('Read Claude setup');
 
-  const mcpCount = Object.keys(settings.mcpServers || {}).length;
-  console.log(chalk.dim(`    • ${mcpCount} MCP server(s)`));
+  console.log(chalk.dim(`    • ${Object.keys(mcpServers).length} MCP server(s)`));
   console.log(chalk.dim(`    • ${agents.length} agent(s)`));
   console.log(chalk.dim(`    • ${skills.length} skill(s)`));
   console.log(chalk.dim(`    • CLAUDE.md: ${claudeMd ? 'yes' : 'no'}`));
 
   // Strip secrets
-  const { result: cleanSettings, warnings } = stripSecrets(settings);
+  const { result: cleanMcp, warnings } = stripSecrets({ mcpServers });
   if (warnings.length > 0) {
     console.log(chalk.yellow(`\n  Redacted ${warnings.length} potential secret(s):`));
     warnings.forEach((w) => console.log(chalk.yellow(`    - ${w}`)));
@@ -94,7 +125,7 @@ export async function updateCommand(repo, options) {
     const manifest = {
       name: repo.split('/')[1],
       version: '1.0.0',
-      mcpServers: cleanSettings.mcpServers || {},
+      mcpServers: cleanMcp.mcpServers || {},
     };
     if (agents.length > 0) manifest.agents = agents.map((a) => a.name);
     if (skills.length > 0) manifest.skills = skills.map((s) => s.name);
@@ -149,6 +180,7 @@ export async function updateCommand(repo, options) {
       };
 
       execSync(`git commit -m "${answers.message}"`, { cwd: cloneDir, stdio: 'pipe', env: gitEnv });
+      execSync(`git remote set-url origin https://${token}@github.com/${repo}.git`, { cwd: cloneDir, stdio: 'pipe' });
       execSync('git push', { cwd: cloneDir, stdio: 'pipe' });
 
       updateSpinner.succeed('Updated!');
