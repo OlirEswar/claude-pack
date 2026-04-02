@@ -12,7 +12,7 @@ npm install -g @olireswar/cc-config
 
 Claude Code setups include MCP servers, custom agents, skills, and CLAUDE.md instructions. `cc-config` lets you publish your setup to GitHub and install setups shared by others — no manual config editing.
 
-Browse the community registry at **[cc-config.dev](https://github.com/OlirEswar/claude-pack)**
+Browse the community registry at **[claude-pack.vercel.app](claude-pack.vercel.app)**
 
 ---
 
